@@ -9,9 +9,14 @@ environment:
 
 dependencies:
   build: ^2.0.0
-  source_gen: ^1.0.0
-  hive: ^2.0.4
-  analyzer: ">=1.0.0 <5.0.0"
+  source_gen: ^2.0.0
+  hive:
+    git:
+      url: https://github.com/YassineJaaouan/hive.git
+      ref: 0e0daf85f9fb43be8a7b85650f5a1d160c54fa11
+      path: hive
+
+  analyzer: ^6.11.0
   source_helper: ^1.1.0
 
 dev_dependencies:

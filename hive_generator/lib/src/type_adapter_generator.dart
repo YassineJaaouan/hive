@@ -9,8 +9,7 @@ import 'package:source_gen/source_gen.dart';
 
 class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
   static String generateName(String typeName) {
-    var adapterName =
-        '${typeName}Adapter'.replaceAll(RegExp(r'[^A-Za-z0-9]+'), '');
+    var adapterName = '${typeName}Adapter'.replaceAll(RegExp(r'[^A-Za-z0-9]+'), '');
     if (adapterName.startsWith('_')) {
       adapterName = adapterName.substring(1);
     }
@@ -21,8 +20,7 @@ class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
   }
 
   @override
-  Future<String> generateForAnnotatedElement(
-      Element element, ConstantReader annotation, BuildStep buildStep) async {
+  Future<String> generateForAnnotatedElement(Element element, ConstantReader annotation, BuildStep buildStep) async {
     var cls = getClass(element);
     var library = await buildStep.inputLibrary;
     var gettersAndSetters = getAccessors(cls, library);
@@ -36,9 +34,7 @@ class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
     var typeId = getTypeId(annotation);
 
     var adapterName = getAdapterName(cls.name, annotation);
-    var builder = cls.isEnum
-        ? EnumBuilder(cls, getters)
-        : ClassBuilder(cls, getters, setters);
+    var builder = cls.isDartCoreEnum ? EnumBuilder(cls, getters) : ClassBuilder(cls, getters, setters);
 
     return '''
     class $adapterName extends TypeAdapter<${cls.name}> {
@@ -93,8 +89,7 @@ class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
     return accessorNames;
   }
 
-  List<List<AdapterField>> getAccessors(
-      ClassElement cls, LibraryElement library) {
+  List<List<AdapterField>> getAccessors(ClassElement cls, LibraryElement library) {
     var accessorNames = getAllAccessorNames(cls);
 
     var getters = <AdapterField>[];
@@ -102,8 +97,7 @@ class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
     for (var name in accessorNames) {
       var getter = cls.lookUpGetter(name, library);
       if (getter != null) {
-        var getterAnn =
-            getHiveFieldAnn(getter.variable) ?? getHiveFieldAnn(getter);
+        var getterAnn = getHiveFieldAnn(getter.variable) ?? getHiveFieldAnn(getter);
         if (getterAnn != null) {
           var field = getter.variable;
           getters.add(AdapterField(
@@ -117,8 +111,7 @@ class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
 
       var setter = cls.lookUpSetter('$name=', library);
       if (setter != null) {
-        var setterAnn =
-            getHiveFieldAnn(setter.variable) ?? getHiveFieldAnn(setter);
+        var setterAnn = getHiveFieldAnn(setter.variable) ?? getHiveFieldAnn(setter);
         if (setterAnn != null) {
           var field = setter.variable;
           setters.add(AdapterField(
@@ -136,8 +129,7 @@ class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
 
   void verifyFieldIndices(List<AdapterField> fields) {
     for (var field in fields) {
-      check(field.index >= 0 && field.index <= 255,
-          'Field numbers can only be in the range 0-255.');
+      check(field.index >= 0 && field.index <= 255, 'Field numbers can only be in the range 0-255.');
 
       for (var otherField in fields) {
         if (otherField == field) continue;
